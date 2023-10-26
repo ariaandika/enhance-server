@@ -1,0 +1,23 @@
+{
+  "name": "@deuzo/enhance-server",
+  "version": "0.1.0",
+  "license": "MIT",
+  "module": "src/index.ts",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./register": "./src/register.ts",
+    "./build": "./scripts/build.ts",
+    "./types": "./src/types/index.d.ts",
+    "./types/*": "./src/types/*"
+  }
+}
