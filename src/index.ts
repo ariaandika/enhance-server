@@ -7,7 +7,14 @@ export const Html = {
    */
   postProcess(content: string, headers: Headers, opt: HTMLConfig) {
     let result: JSX.Element
-    const isPr = headers.has('pr-request')
+    const isPr = Boolean(opt.prHeader || opt.prHeader == '')
+
+    // assign layout if browser request
+    if (!isPr && opt.layout) {
+      result = opt.layout(Object.assign({ slot: content }, opt.layoutArgument))
+    } else {
+      result = content
+    }
 
     // used for pr-module response
     let moduleHeaders = [] as string[]
@@ -27,13 +34,6 @@ export const Html = {
       headers.set('pr-module',moduleHeaders.join('; '))
     }
 
-
-    // assign layout if browser request
-    if (!isPr && opt.layout) {
-      result = opt.layout(Object.assign({ slot: content }, opt.layoutArgument))
-    } else {
-      result = content
-    }
 
     if (!isPr) {
       result = Html.base({ slot: result, heads: opt.heads.join('') })
@@ -56,14 +56,15 @@ export const Html = {
   },
 }
 
-type ModuleConfig = {
+export type ModuleConfig = {
   global?: string, 
   exec?: 'always' 
 }
 
-type HTMLConfig = {
+export type HTMLConfig = {
   heads: string[]
   modules: [string,ModuleConfig][]
+  prHeader?: string
   layout?: (arg: { slot: JSX.Element } & EnhanceLayoutArgument) => JSX.Element
   layoutArgument?: EnhanceLayoutArgument
 }
